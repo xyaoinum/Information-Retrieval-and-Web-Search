@@ -1,0 +1,100 @@
+a. Your name and your partner's name
+	Group Name: Project 3 Group 16
+	Name and UNI: Yao Xiao, yx2329 / Ying Zhu, yz3039
+
+b. A list of all the files that you are submitting
+	INTEGRATED-DATASET.csv
+	p3.py
+	example-run.txt
+	README
+
+
+c. A detailed description explaining:
+
+(a) which NYC Open Data data set(s) you used to generate the INTEGRATED-DATASET file?
+
+	file 1 (math test result): NYS_Math_Test_Results_By_Grade_2006-2011_-_District_-_By_Race-_Ethnicity.csv
+	file 2 (english test result): English_Language_Arts__ELA__Test_Results_by_Grade_2006-2011_-_District_-_by_Race-Ethnicity.csv
+
+(b) what (high-level) procedure you used to map the original NYC Open Data data set(s) into your INTEGRATED-DATASET file?
+
+	For the data in file 1 (table 1), keep fields [District, Grade, Year, Category, Mean Scale Score] and remove others. Besides, remove all the rows having Grade = 'All Grades' (aggregate statistics that does not represent a single item) or Mean Scale Score = 's' (too few sample to get a reasonable mean score).
+
+	For the data in file 2 (table 2), do the same as above.
+
+	Rename field 'Mean Scale Score' in table 1 as 'Math', rename field 'Mean Scale Score' in table 2 as 'English', rename 'Category' in both tables as 'Race'.
+
+	Join the two tables on fields [District, Grade, Year, Race], to get a single table (table 3) having six fields [District, Grade, Year, Race, Math, English].
+
+	For table 3, modify the numeric Math score to categorical score base on the following rules: A:[0,647), B:[647,655], C:[662,672), D:[672,inf). Modify the numeric English score to categorical score base on the following rules: A:[0,658), B:[658,669], C:[669,680), D:[680,inf). The threshoald is calculated such that each category has roughly the same number of scores.
+
+	For each data entry in table 3, append the corresponding field name in front of each entry. e.g. [1,3,2006,Asian,A,A] now becomes [District_1,Grade_3,Year_2006,Race_Asian,Math_A,English_A].
+
+	Export the table 3 as INTEGRATED-DATASET.csv without the field names row.
+
+(c) what makes your choice of INTEGRATED-DATASET file interesting (in other words, justify your choice of NYC Open Data data set(s))?
+	We are interested in the relationship between [District, Grade, Year, Race, Math Score, English Score]. Many interesting result could come up from this dataset:
+	e.g. We may know in which year students had a high math score (which implies math test were easy in that year, relative to other years); We may also find out a high math score implies a high english score, or the reverse; and etc. All those possibilities are interesting to know, so we stick with this integraded dataset.
+
+d. A clear description of how to run your program
+
+	In Terminal, cd into the group16-proj3 directory, and type the following:
+
+	python p3.py <dataset file name> <min_support> <min_confidence>
+
+	e.g. python p3.py INTEGRATED-DATASET.csv 0.1 0.5
+
+
+e. A clear description of the internal design of your project
+	
+	We are doing exactly the same as in Section 2.1.1. 
+
+	The input dataset 'INTEGRATED-DATASET.csv' is already formatted such that the items of each transaction contains in a row. 
+
+	We encode each item to an positive integer for the convenience of sorting and comparing. For each round, we calculate the L(k) = {large k-itemsets} based on L(k-1), which uses the apriori-gen function to get a set of candicates, and filter out the candidates that doesn't meet the minimun support. Now we get all the large itemsets along with their support.
+
+	Finally, we iterate through the large itemsets from large k to small k, and use the formula conf(lhs=>rhs) = supp(lhs_union_rhs)/supp(lhs) to get all the association rules, and filter those that doesn't meet the minimum confidence.
+
+	In the python code, each round of L(k) is calculated in the global scope, and apriori-gen function is defined as apripri_gen(prev_lk,k).
+
+f. The command line specification of an interesting sample run. Briefly explain why the results are interesting.
+
+	Command: python p3.py INTEGRATED-DATASET.csv 0.1 0.5
+	we see the following high-confidence association rules from the result:
+		[Math_A]=>[English_A] (Conf: 78.146%, Supp: 15.629%)
+		[English_E]=>[Math_E] (Conf: 74.651%, Supp: 14.172%)
+		[English_A]=>[Math_A] (Conf: 74.059%, Supp: 15.629%)
+		[Math_E]=>[English_E] (Conf: 71.018%, Supp: 14.172%)
+		[English_A]=>[Race_Asian] (Conf: 62.029%, Supp: 13.091%)
+		[Race_Asian]=>[English_A] (Conf: 52.758%, Supp: 13.091%)
+
+	Why interesting:
+	First, we find out that good English score and good Math score are highly correlated, same with bad scores. This is interesting because it implies that testers tend to perfrom uniformly good or bad on all the tests, ragardless of the subject.
+
+	Second, we find out that Asian ethnicity and high English score are highly correlated. This is interesting because countries in Asia generally doesn't use English as their official lauguage. It implies Asian tends to prepare for English test better than people with other ethnicity.
+
+g. Any additional information that you consider significant
+	The sample command takes about 5 seconds to finish running. For a lower support or confidence, the program may take up to 1 - 2 minutes to finish running.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

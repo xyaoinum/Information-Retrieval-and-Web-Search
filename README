@@ -1,0 +1,11 @@
+proj1: Relevance Feedback and Query Expansion
+Implemented a mechanism that expends the last query based on the user feedback
+to achieve a higher precision.
+
+proj2: Web Database Classification
+Implemented the query-probing classification algorithm, and constuct content summary
+ for each topic node.
+
+proj3: Mining the Association Rules
+Implemented a a-priori algorithm that finds the large itemsets as well as 
+high-confidence association rules from some NYC Open Data datasets.

@@ -1,0 +1,66 @@
+a) Your group name on CourseWorks ("Project 1 Group n"), your name and Columbia UNI, and your partner's name and Columbia UNI
+
+1. Group Name: Project 1 Group 16
+2. Name and UNI: Yao Xiao, yx2329 / Ying Zhu, yz3039
+
+
+b) A list of all the files that you are submitting
+
+1. RFandQE.py
+2. stopwords.txt
+3. verb.txt
+4. README
+5. transcript
+
+
+c) A clear description of how to run your program (note that your project must compile/run under Linux in your CS account)
+
+In Terminal, cd into the group16-proj1 directory, and type the following:
+
+python RFandQE.py <bing account key> <precision> <query>
+
+
+d) A clear description of the internal design of your project
+
+Our project takes three arguments (bing account key, precision, query) and do the following:
+
+1. Load the stop words (stopwords.txt, downloaded from the project link) and verb frequency (verb.txt, downloaded from WordNet) which will be used when modifying query in step 4.
+
+2. Ask Bing to return the top 10 results in JSON format from the user query by calling the function "get_query_result". Parse the results we get from Bing using the json library into a Python dictionary.
+
+3. Present the 10 results to the user in the form of url, title, summary one by one and ask user to input y/n ('y' if the result is relevant to their query, 'n' otherwise) and record the answers in the dictionary we get from step 1.
+
+4. If the current precision is lower than than the target precision and is greater than 0 (if it is 0, exit), we process the data together with the user input, generate two more tokens, rearrange the tokens to form new query, and return to step 2. (see part (e)) for detailed explanation)
+
+
+e) A detailed description of your query-modification method
+
+When we have the current query q, the 10 results get from Bing with the user's relevance mark, we do the following to generate two more words to add to the query:
+
+1. Generate a list of strings where each string is the content of the corresponding Bing result. We use the title, the summary and the whole page data as our content (see part g,1 for why we decided to scrape the web). The functions"get_useful_page_content" is used to scrape and process page contents, and we used BeautifulSoup library.
+
+2. From the 10 result strings we generate a vector of all the words appeared in the strings except stopwords and digits, and we name it "vocabulary_vector", where n is the size of the vector (i.e. the vocabulary size in our 10 result strings), we denote word that appears in the ith entry of the "vocabulary_vector" word i.
+
+3. For each of the 10 result strings, we generate a frequency vector of size n where the ith entry is the frequency (normalized by result length) of word i in that string (i.e. in the corresponding Bing result). So, if the "vocabulary_vector" is ("advanced", "database", "systems"), and our string is "database systems, database", then the frequency vector of our string would be (0,2/3,1/3).
+
+4. For the 10 frequency vectors we get from step 3, we add up the vectors that correspond to relevant documents and divide by the number of relevant documents to get a relevant vector (in the code, it is called the "pos_vector"). Similarly, we get a non relevant vector ("neg_vector"). And we subtract the two to get our final weight vector ("diff_vector").
+
+5. To reduce the influence of frequent verbs on our weight vector, we divide each verb by the their frequency score which we preloaded into our "verbFreq" dictionary. So more frequent verbs are scaled down more. (see part g,2)
+
+6. Finally, sort the "vocabulary_vector" according to their weight in the weight vector and we retrieve the top 2 that do not already appear in the current query. Furthermore, we rearranged the query terms so that the term with the highest weight comes first.
+
+
+f) Bing Search Account Key
+
+2a8r64Alhg46vo+3MKPkBdHBnaRKLzFNtHAaKYdRYVU
+
+
+g) Any additional information that you consider significant
+
+1. We first only used title and summary as our content, but we find out that in many cases (especially when the first round has only 1 or 2 relevant results), we have to pick from many same frequent words because all of these words appear only once. This problem is solved by adding the whole web page content (after removing the tags,links,scripts,...) as our content.
+
+2. Just like stopwords are sometimes troublesome for our weight vector, we find out that frequent verbs are also problematic in the same sense in our particular case.
+For example, before reweighing the verbs, the appended token for 'brin' is 'google search', and 'search' is not too informative. So we tried to reduce this influence as much as possible. We found that WordNet's "synset_cnt" is a good approximation of how frequent the verb is, and works well many cases. (It makes sense to say if a word is in more synsets then the word is more frequent.)
+
+
+

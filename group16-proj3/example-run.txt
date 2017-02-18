@@ -1,0 +1,40 @@
+
+==Frequent itemsets (min_sup=10.000%)
+[Race_Black], 25.430%
+[Race_Hispanic], 25.430%
+[Race_Asian], 24.812%
+[Race_White], 24.327%
+[English_A], 21.104%
+[English_C], 20.971%
+[Math_C], 20.640%
+[Math_B], 20.618%
+[Math_A], 20.000%
+[Math_E], 19.956%
+[English_D], 19.625%
+[English_B], 19.316%
+[English_E], 18.985%
+[Math_D], 18.786%
+[Grade_7], 16.755%
+[Year_2010], 16.755%
+[Grade_8], 16.733%
+[Year_2011], 16.711%
+[Year_2006], 16.667%
+[Grade_3], 16.645%
+[Grade_6], 16.645%
+[Year_2007], 16.645%
+[Grade_5], 16.623%
+[Year_2009], 16.623%
+[Grade_4], 16.600%
+[Year_2008], 16.600%
+[Math_A, English_A], 15.629%
+[Math_E, English_E], 14.172%
+[Race_Asian, English_A], 13.091%
+
+==High-confidence association rules (min_conf=50.000%)
+[Math_A]=>[English_A] (Conf: 78.146%, Supp: 15.629%)
+[English_E]=>[Math_E] (Conf: 74.651%, Supp: 14.172%)
+[English_A]=>[Math_A] (Conf: 74.059%, Supp: 15.629%)
+[Math_E]=>[English_E] (Conf: 71.018%, Supp: 14.172%)
+[English_A]=>[Race_Asian] (Conf: 62.029%, Supp: 13.091%)
+[Race_Asian]=>[English_A] (Conf: 52.758%, Supp: 13.091%)
+

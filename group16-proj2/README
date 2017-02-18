@@ -1,0 +1,48 @@
+a. Your group name on CourseWorks ("Project 2 Group n"), your name and Columbia UNI, and your partner's name and Columbia UNI
+1. Group Name: Project 2 Group 16
+2. Name and UNI: Yao Xiao, yx2329 / Ying Zhu, yz3039
+
+
+b. A list of all the files that you are submitting
+classify.py
+getWordsLynx.java
+README
+
+
+c. A clear description of how to run your program (note that your project must compile/run under Linux in your CS account)
+CD into folder group16-proj2, and type the following to run:
+python classify.py <BING_ACCOUNT_KEY> <t_es> <t_ec> <host>
+For example:
+python classify.py kFRQoklsXI8ce9XIoxcYBscDK9eUfx6usx5NXKGCjgU 0.5 100 fifa.com
+
+
+d. A clear description of the internal design of your project, for each part of the project
+
+Part 1
+Since the categorization scheme is quite simple (only 2 levels), we hardcoded the categories and associated queries in python. Then, we first do a categorization on the top level by quering all the keywords associated with the each top-level category, and for those categories having specificity and coverage greater or equal to the user specified value, we go one level further to categorize to sub-categories. Finally, we return all the categories (to the deepest) that has specificity and coverage greater or equal to the user specified value.
+
+The functions associated with this part are:
+classify(siteURL, tes, tec, accountKey)
+classifyChild(accountKey,siteURL, tes, tec, parentName, parentSpec)
+
+Part 2
+For each category node among root and the 3 top categories that we visited in Part 1, we retrieve the top 4 page (and remove duplicates), and use system call to compile and run getWordsLynx java program to get all the tokens. In this process, we record what tokens are generated and how many document page has this token. Finally for each of the categories that we visited in Part 1, we write the result to a file. Each line has the following format:
+<word>#<frequency in the document sample>
+
+The functions associated with this part are:
+add_to_doc_freq(page_content, doc_freq)
+extract(sample,host)
+
+
+e. Your Bing account key (so we can test your project)
+kFRQoklsXI8ce9XIoxcYBscDK9eUfx6usx5NXKGCjgU
+
+
+f. Any additional information that you consider significant
+1. Even if we are allowed to ignore non-html pages, we didn't do that because that's not a requirement.
+2. We didn't include muliple-word infromation in content summaries. 
+
+
+
+
+
